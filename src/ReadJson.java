@@ -30,20 +30,20 @@ public class ReadJson {
 
     }
 
-    public ReadJson(){
+    public ReadJson() {
         try {
             pull();
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
 
-    public  void pull() throws ParseException {
+    public void pull() throws ParseException {
         String output = "abc";
-        String totlaJson="";
+        String totlaJson = "";
         try {
 
-            URL url = new URL("https://swapi.dev/api/people/4/");
+            URL url = new URL("https://last-airbender-api.fly.dev/api/v1/characters/random");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -60,7 +60,7 @@ public class ReadJson {
             System.out.println("Output from Server .... \n");
             while ((output = br.readLine()) != null) {
                 System.out.println(output);
-                totlaJson+=output;
+                totlaJson += output;
             }
 
             conn.disconnect();
@@ -73,41 +73,36 @@ public class ReadJson {
         }
 
         JSONParser parser = new JSONParser();
-        //System.out.println(str);
-        org.json.simple.JSONObject jsonObject = (org.json.simple.JSONObject) parser.parse(totlaJson);
-        System.out.println(jsonObject);
 
         try {
 
-            String name = (String)jsonObject.get("name");
-            String mass = (String)jsonObject.get("mass");
-            String eyecolor = (String)jsonObject.get("eye_color");
-            String birthyear = (String)jsonObject.get("birth_year");
+            org.json.simple.JSONArray jsonmainarray = (org.json.simple.JSONArray) parser.parse(totlaJson);
+            int p = jsonmainarray.size();
+            for (int i = 0; i < p; ++i) {
+                JSONObject object = (JSONObject) jsonmainarray.get(i);
+                System.out.println("Name: "+object.get("name"));
+                System.out.println("Gender: "+object.get("gender"));
+                System.out.println("Profession: "+object.get("profession"));
+                System.out.println("Hair color: "+object.get("hair"));
+                System.out.println("Weapon: "+object.get("weapon"));
 
-            org.json.simple.JSONArray msg = (org.json.simple.JSONArray) jsonObject.get("films");
-            int n =   msg.size(); //(msg).length();
-            for (int i = 0; i < n; ++i) {
-                String test =(String) msg.get(i);
-                System.out.println(test);
-                // System.out.println(person.getInt("key"));
+                org.json.simple.JSONArray enemies = (org.json.simple.JSONArray) object.get("enemies");
+                int d = enemies.size();
+                for (int k = 0; k < d; k++) {
+                    String enemies1 = (String) enemies.get(k);
+                    System.out.println("Enemies: "+enemies1);
+                }
+
+                org.json.simple.JSONArray allies = (org.json.simple.JSONArray) object.get("allies");
+                int j = allies.size();
+                for (int h = 0; h < j; h++) {
+                    String allies1 = (String) allies.get(h);
+                    System.out.println("Allies: "+allies1);
+                }
+
             }
 
-            System.out.println(name);
-            System.out.println(mass);
-            System.out.println(eyecolor);
-            System.out.println(birthyear);
-
-            org.json.simple.JSONArray starships = (org.json.simple.JSONArray) jsonObject.get("starships");
-            int b =   starships.size(); //(msg).length();
-            for (int i = 0; i < b; ++i) {
-                String test =(String) starships.get(i);
-                System.out.println(test);
-                // System.out.println(person.getInt("key"));
-            }
-
-        }
-
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
