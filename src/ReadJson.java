@@ -1,3 +1,6 @@
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,6 +15,9 @@ import java.net.URL;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import javax.swing.*;
+
 
 // Program for print data in JSON format.
 public class ReadJson {
@@ -28,9 +34,75 @@ public class ReadJson {
         System.out.print(file.get("Tuition Fees"));
         ReadJson readingIsWhat = new ReadJson();
 
+        readingIsWhat.showEventDemo();
+
     }
 
+    private JFrame mainFrame;
+    private JPanel searchpanel1;
+    private JPanel biggerpanel;
+    private JPanel infopanel;
+    private JPanel infopanel1;
+    private JTextArea ta;
+    private JTextArea tb;
+    private JTextArea tc;
+
+    int WIDTH = 500;
+    int HEIGHT = 650;
+
+    private void prepareGUI() {
+        mainFrame = new JFrame("Avatar the Last Airbender");
+        mainFrame.setSize(WIDTH, HEIGHT);
+        mainFrame.setLayout(new BorderLayout());
+        mainFrame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent windowEvent) {
+                System.exit(0);
+            }
+        });
+
+        infopanel1 = new JPanel();
+        infopanel1.setLayout(new BorderLayout());
+        biggerpanel = new JPanel();
+        biggerpanel.setLayout(new GridLayout(2,1));
+        infopanel = new JPanel();
+        infopanel.setLayout(new GridLayout(1,2));
+        ta = new JTextArea();
+        tb = new JTextArea();
+        tc = new JTextArea();
+        searchpanel1 = new JPanel();
+        searchpanel1.setLayout(new GridLayout(1,3));
+
+
+
+        mainFrame.setVisible(true);
+    }
+
+    public void showEventDemo(){
+
+        JButton button1 = new JButton("Search ATLA character:");
+        JLabel label1 = new JLabel ("Character info:", JLabel.CENTER);
+
+        button1.setActionCommand("Search!");
+        //button1.addActionListener(new ButtonClickListener());
+        mainFrame.add(searchpanel1, BorderLayout.NORTH);
+        searchpanel1.add(button1);
+        searchpanel1.add(ta);
+        mainFrame.add(biggerpanel);
+        biggerpanel.add(infopanel1);
+        infopanel1.add(infopanel, BorderLayout.CENTER);
+        infopanel1.add(label1, BorderLayout.NORTH);
+        infopanel.add(tb);
+        infopanel.add(tc);
+
+
+        mainFrame.setVisible(true);
+    }
+
+
     public ReadJson() {
+
+        prepareGUI();
+
         try {
             pull();
         } catch (Exception e) {
@@ -43,7 +115,7 @@ public class ReadJson {
         String totlaJson = "";
         try {
 
-            URL url = new URL("https://last-airbender-api.fly.dev/api/v1/characters/random");
+            URL url = new URL("https://last-airbender-api.fly.dev/api/v1/characters");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
