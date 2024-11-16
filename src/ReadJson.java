@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
@@ -7,7 +9,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
+import java.sql.SQLOutput;
 
 // video to load jar
 //https://www.youtube.com/watch?v=QAJ09o3Xl_0
@@ -15,9 +17,7 @@ import java.net.URL;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import javax.swing.*;
-
 
 // Program for print data in JSON format.
 public class ReadJson {
@@ -35,7 +35,6 @@ public class ReadJson {
         ReadJson readingIsWhat = new ReadJson();
 
         readingIsWhat.showEventDemo();
-
     }
 
     private JFrame mainFrame;
@@ -45,8 +44,6 @@ public class ReadJson {
     private JPanel infopanel1;
     private JTextArea ta;
     private JTextArea tb;
-    private JTextArea tc;
-
     int WIDTH = 500;
     int HEIGHT = 650;
 
@@ -65,14 +62,11 @@ public class ReadJson {
         biggerpanel = new JPanel();
         biggerpanel.setLayout(new GridLayout(2,1));
         infopanel = new JPanel();
-        infopanel.setLayout(new GridLayout(1,2));
+        infopanel.setLayout(new GridLayout(1,1));
         ta = new JTextArea();
         tb = new JTextArea();
-        tc = new JTextArea();
         searchpanel1 = new JPanel();
         searchpanel1.setLayout(new GridLayout(1,3));
-
-
 
         mainFrame.setVisible(true);
     }
@@ -83,21 +77,19 @@ public class ReadJson {
         JLabel label1 = new JLabel ("Character info:", JLabel.CENTER);
 
         button1.setActionCommand("Search!");
-        //button1.addActionListener(new ButtonClickListener());
+        button1.addActionListener(new ButtonClickListener());
         mainFrame.add(searchpanel1, BorderLayout.NORTH);
         searchpanel1.add(button1);
         searchpanel1.add(ta);
         mainFrame.add(biggerpanel);
+        //add to bigger panel here the picture of the character
         biggerpanel.add(infopanel1);
         infopanel1.add(infopanel, BorderLayout.CENTER);
         infopanel1.add(label1, BorderLayout.NORTH);
         infopanel.add(tb);
-        infopanel.add(tc);
-
 
         mainFrame.setVisible(true);
     }
-
 
     public ReadJson() {
 
@@ -152,24 +144,34 @@ public class ReadJson {
             int p = jsonmainarray.size();
             for (int i = 0; i < p; ++i) {
                 JSONObject object = (JSONObject) jsonmainarray.get(i);
-                System.out.println("Name: "+object.get("name"));
-                System.out.println("Gender: "+object.get("gender"));
-                System.out.println("Profession: "+object.get("profession"));
-                System.out.println("Hair color: "+object.get("hair"));
-                System.out.println("Weapon: "+object.get("weapon"));
+
+                /** WRITE A CODE THAT ESSENTIALLY SAYS "IF THE SEARCH WORD (CHARACTER NAME) IS FOUND ANYWHERE IN ONE OF THE OBJECTS, SPIT OUT ALL OF THE INFO AND THE PICTURE FOR ONLY THAT CHARACTER (EVERYTHING IN THE OBJECT)**/
+                /**CONNECT IT TO THE BUTTON**/
+
+
+                while(jsonmainarray.contains(ta.getText())){
+                    tb.setText("hello");
+
+                    //how to make it search through the objects??
+                }
+
+
+//                System.out.println("Name: "+object.get("name"));
+//                System.out.println("Gender: "+object.get("gender"));
+//                System.out.println("Profession: "+object.get("profession"));
+//                System.out.println("Hair color: "+object.get("hair"));
+//                System.out.println("Weapon: "+object.get("weapon"));
 
                 org.json.simple.JSONArray enemies = (org.json.simple.JSONArray) object.get("enemies");
                 int d = enemies.size();
                 for (int k = 0; k < d; k++) {
                     String enemies1 = (String) enemies.get(k);
-                    System.out.println("Enemies: "+enemies1);
                 }
 
                 org.json.simple.JSONArray allies = (org.json.simple.JSONArray) object.get("allies");
                 int j = allies.size();
                 for (int h = 0; h < j; h++) {
                     String allies1 = (String) allies.get(h);
-                    System.out.println("Allies: "+allies1);
                 }
 
             }
@@ -177,8 +179,20 @@ public class ReadJson {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
+    private class ButtonClickListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String command = e.getActionCommand();
+
+            if (command.equals("Search!")) {
+
+            }
+
+        }
+    }
+
+
 }
 
 
