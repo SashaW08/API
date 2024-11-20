@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.SQLOutput;
 
 // video to load jar
 //https://www.youtube.com/watch?v=QAJ09o3Xl_0
@@ -42,8 +41,6 @@ public class ReadJson {
     private JPanel biggerpanel;
     private JPanel infopanel;
     private JPanel infopanel1;
-    private JPanel imagepanel;
-    private JLabel imagelabel;
     private JTextArea tb;
     int WIDTH = 500;
     int HEIGHT = 650;
@@ -58,13 +55,10 @@ public class ReadJson {
                 System.exit(0);
             }
         });
-
-        imagepanel = new JPanel();
-        imagelabel = new JLabel();
         infopanel1 = new JPanel();
         infopanel1.setLayout(new BorderLayout());
         biggerpanel = new JPanel();
-        biggerpanel.setLayout(new GridLayout(2,1));
+        biggerpanel.setLayout(new GridLayout(1,1));
         infopanel = new JPanel();
         infopanel.setLayout(new GridLayout(1,1));
         tb = new JTextArea();
@@ -88,12 +82,10 @@ public class ReadJson {
         searchpanel1.add(button2);
         searchpanel1.add(button1);
         mainFrame.add(biggerpanel);
-        biggerpanel.add(imagepanel);
         biggerpanel.add(infopanel1);
         infopanel1.add(infopanel, BorderLayout.CENTER);
         infopanel1.add(label1, BorderLayout.NORTH);
         infopanel.add(tb);
-        imagepanel.add(imagelabel);
 
         mainFrame.setVisible(true);
     }
@@ -172,14 +164,13 @@ public class ReadJson {
                     tb.append("Ally: "+allies1+"\n");
                 }
 
-                //URL url = new URL(object.get("photoUrl"));
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+
+
 
     private class ButtonClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -196,13 +187,11 @@ public class ReadJson {
 
                 System.out.println(number);
 
-
                 try {
                     pull();
                 } catch (ParseException ex) {
                     throw new RuntimeException(ex);
                 }
-
 
             }
 
@@ -223,13 +212,9 @@ public class ReadJson {
                     throw new RuntimeException(ex);
                 }
 
-
             }
 
         }
     }
 
-
 }
-
-
