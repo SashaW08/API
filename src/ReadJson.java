@@ -42,10 +42,12 @@ public class ReadJson {
     private JPanel biggerpanel;
     private JPanel infopanel;
     private JPanel infopanel1;
-    private JTextArea ta;
+    private JPanel imagepanel;
+    private JLabel imagelabel;
     private JTextArea tb;
     int WIDTH = 500;
     int HEIGHT = 650;
+    int number = 0;
 
     private void prepareGUI() {
         mainFrame = new JFrame("Avatar the Last Airbender");
@@ -57,13 +59,14 @@ public class ReadJson {
             }
         });
 
+        imagepanel = new JPanel();
+        imagelabel = new JLabel();
         infopanel1 = new JPanel();
         infopanel1.setLayout(new BorderLayout());
         biggerpanel = new JPanel();
         biggerpanel.setLayout(new GridLayout(2,1));
         infopanel = new JPanel();
         infopanel.setLayout(new GridLayout(1,1));
-        ta = new JTextArea();
         tb = new JTextArea();
         searchpanel1 = new JPanel();
         searchpanel1.setLayout(new GridLayout(1,3));
@@ -73,20 +76,24 @@ public class ReadJson {
 
     public void showEventDemo(){
 
-        JButton button1 = new JButton("Search ATLA character:");
+        JButton button1 = new JButton("Next");
+        JButton button2 = new JButton("Previous");
         JLabel label1 = new JLabel ("Character info:", JLabel.CENTER);
 
-        button1.setActionCommand("Search!");
+        button1.setActionCommand("Next");
         button1.addActionListener(new ButtonClickListener());
+        button2.setActionCommand("Previous");
+        button2.addActionListener(new ButtonClickListener());
         mainFrame.add(searchpanel1, BorderLayout.NORTH);
+        searchpanel1.add(button2);
         searchpanel1.add(button1);
-        searchpanel1.add(ta);
         mainFrame.add(biggerpanel);
-        //add to bigger panel here the picture of the character
+        biggerpanel.add(imagepanel);
         biggerpanel.add(infopanel1);
         infopanel1.add(infopanel, BorderLayout.CENTER);
         infopanel1.add(label1, BorderLayout.NORTH);
         infopanel.add(tb);
+        imagepanel.add(imagelabel);
 
         mainFrame.setVisible(true);
     }
@@ -142,50 +149,80 @@ public class ReadJson {
 
             org.json.simple.JSONArray jsonmainarray = (org.json.simple.JSONArray) parser.parse(totlaJson);
             int p = jsonmainarray.size();
-            for (int i = 0; i < p; ++i) {
-                JSONObject object = (JSONObject) jsonmainarray.get(i);
 
-                /** WRITE A CODE THAT ESSENTIALLY SAYS "IF THE SEARCH WORD (CHARACTER NAME) IS FOUND ANYWHERE IN ONE OF THE OBJECTS, SPIT OUT ALL OF THE INFO AND THE PICTURE FOR ONLY THAT CHARACTER (EVERYTHING IN THE OBJECT)**/
-                /**CONNECT IT TO THE BUTTON**/
+                JSONObject object = (JSONObject) jsonmainarray.get(number);
 
-
-                while(jsonmainarray.contains(ta.getText())){
-                    tb.setText("hello");
-
-                    //how to make it search through the objects??
-                }
-
-
-//                System.out.println("Name: "+object.get("name"));
-//                System.out.println("Gender: "+object.get("gender"));
-//                System.out.println("Profession: "+object.get("profession"));
-//                System.out.println("Hair color: "+object.get("hair"));
-//                System.out.println("Weapon: "+object.get("weapon"));
+                tb.append("Name: "+object.get("name")+"\n");
+            tb.append("Gender: "+object.get("gender")+"\n");
+            tb.append("Profession: "+object.get("profession")+"\n");
+            tb.append("Hair color: "+object.get("hair")+"\n");
+            tb.append("Weapon: "+object.get("weapon")+"\n");
 
                 org.json.simple.JSONArray enemies = (org.json.simple.JSONArray) object.get("enemies");
                 int d = enemies.size();
                 for (int k = 0; k < d; k++) {
                     String enemies1 = (String) enemies.get(k);
+                    tb.append("Enemy: "+enemies1+"\n");
                 }
 
                 org.json.simple.JSONArray allies = (org.json.simple.JSONArray) object.get("allies");
                 int j = allies.size();
                 for (int h = 0; h < j; h++) {
                     String allies1 = (String) allies.get(h);
+                    tb.append("Ally: "+allies1+"\n");
                 }
 
-            }
+                //URL url = new URL(object.get("photoUrl"));
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     private class ButtonClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
 
-            if (command.equals("Search!")) {
+            if (command.equals("Next")) {
+                tb.setText("");
+
+                number = number+1;
+
+                if(number==20){
+                    tb.setText("No more characters this way! Hit 'Previous' button");
+                }
+
+                System.out.println(number);
+
+
+                try {
+                    pull();
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+
+            }
+
+            if(command.equals("Previous")){
+                tb.setText("");
+
+                number=number-1;
+
+                if(number==-1){
+                    tb.setText("No more characters this way! Hit 'Next' button");
+                }
+
+                System.out.println(number);
+
+                try {
+                    pull();
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+
 
             }
 
