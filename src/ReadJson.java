@@ -9,10 +9,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-// video to load jar
-//https://www.youtube.com/watch?v=QAJ09o3Xl_0
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -41,9 +37,10 @@ public class ReadJson {
     private JPanel biggerpanel;
     private JPanel infopanel;
     private JPanel infopanel1;
+    private JScrollPane scroll;
     private JTextArea tb;
-    int WIDTH = 500;
-    int HEIGHT = 650;
+    int WIDTH = 300;
+    int HEIGHT = 300;
     int number = 0;
 
     private void prepareGUI() {
@@ -55,6 +52,7 @@ public class ReadJson {
                 System.exit(0);
             }
         });
+
         infopanel1 = new JPanel();
         infopanel1.setLayout(new BorderLayout());
         biggerpanel = new JPanel();
@@ -62,6 +60,7 @@ public class ReadJson {
         infopanel = new JPanel();
         infopanel.setLayout(new GridLayout(1,1));
         tb = new JTextArea();
+        scroll = new JScrollPane(tb);
         searchpanel1 = new JPanel();
         searchpanel1.setLayout(new GridLayout(1,3));
 
@@ -85,7 +84,7 @@ public class ReadJson {
         biggerpanel.add(infopanel1);
         infopanel1.add(infopanel, BorderLayout.CENTER);
         infopanel1.add(label1, BorderLayout.NORTH);
-        infopanel.add(tb);
+        infopanel.add(scroll);
 
         mainFrame.setVisible(true);
     }
@@ -145,10 +144,13 @@ public class ReadJson {
                 JSONObject object = (JSONObject) jsonmainarray.get(number);
 
                 tb.append("Name: "+object.get("name")+"\n");
+                tb.append("ID: "+object.get("_id")+"\n");
             tb.append("Gender: "+object.get("gender")+"\n");
             tb.append("Profession: "+object.get("profession")+"\n");
             tb.append("Hair color: "+object.get("hair")+"\n");
             tb.append("Weapon: "+object.get("weapon")+"\n");
+            tb.append("Photo link: "+object.get("photoUrl")+"\n");
+            tb.append("Affiliation: "+object.get("affiliation")+"\n");
 
                 org.json.simple.JSONArray enemies = (org.json.simple.JSONArray) object.get("enemies");
                 int d = enemies.size();
@@ -169,7 +171,6 @@ public class ReadJson {
         }
 
     }
-
 
 
     private class ButtonClickListener implements ActionListener {
