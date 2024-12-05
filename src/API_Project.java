@@ -1,13 +1,17 @@
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -24,6 +28,11 @@ public class API_Project {
         // To print in JSON format.
         API_Project readingIsWhat = new API_Project();
         readingIsWhat.showEventDemo();
+        try {
+            readingIsWhat.addImage();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private JFrame mainFrame;
@@ -32,10 +41,11 @@ public class API_Project {
     private JPanel infopanel;
     private JPanel infopanel1;
     private JPanel picturepanel;
+    private JLabel imageLabel;
     private JScrollPane scroll;
     private JTextArea tb;
-    int WIDTH = 600;
-    int HEIGHT = 600;
+    int WIDTH = 550;
+    int HEIGHT = 800;
     int number = 0;
 
     private void prepareGUI() {
@@ -99,12 +109,65 @@ public class API_Project {
         }
     }
 
+    private void addImage() throws IOException {
+        try {
+
+            String path = "https://cataas.com/cat";
+
+/**repaint image after button is pressed
+ * add to path the tags from the objects in the array
+ * make the object thing a new variable in order to be able to add the tags**/
+
+            URL url = new URL(path);
+            BufferedImage ErrorImage = ImageIO.read(new File("Error.jpg"));
+            BufferedImage inputImageBuff = ImageIO.read(url.openStream());
+
+            ImageIcon inputImage;
+            if (inputImageBuff != null) {
+                inputImage = new ImageIcon(inputImageBuff.getScaledInstance(400, 400, Image.SCALE_SMOOTH));
+
+                if (inputImage != null) {
+                    imageLabel = new JLabel(inputImage);
+                } else {
+                    imageLabel =new JLabel(new ImageIcon(ErrorImage.getScaledInstance(400,400, Image.SCALE_SMOOTH)));
+
+                }
+                picturepanel.removeAll();
+                picturepanel.repaint();
+
+                picturepanel.add(imageLabel);
+                biggerpanel.add(picturepanel);
+
+            }
+            else{
+                imageLabel =new JLabel(new ImageIcon(ErrorImage.getScaledInstance(600, 300, Image.SCALE_SMOOTH)));
+
+            }
+
+        } catch (IOException e) {
+            System.out.println(e);
+            System.out.println("sadness");
+            BufferedImage ErrorImage = ImageIO.read(new File("Error.jpg"));
+            JLabel imageLabel = new JLabel(new ImageIcon(ErrorImage.getScaledInstance(800, 589, Image.SCALE_SMOOTH)));
+
+            picturepanel.removeAll();
+            picturepanel.repaint();
+            picturepanel.add(imageLabel);
+            biggerpanel.add(picturepanel);
+
+        }
+
+        mainFrame.setVisible(true);
+    }
+
+
     public void pull() throws ParseException {
         String output = "abc";
         String totlaJson = "";
         try {
 
             URL url = new URL("https://cataas.com/api/cats?tags=cute");
+
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
@@ -138,12 +201,11 @@ public class API_Project {
         try {
 
             org.json.simple.JSONArray jsonmainarray = (org.json.simple.JSONArray) parser.parse(totlaJson);
-            int p = jsonmainarray.size();
 
             JSONObject object = (JSONObject) jsonmainarray.get(number);
 
             tb.append("ID: "+object.get("_id")+"\n");
-            tb.append("Gender: "+object.get("size")+"\n");
+            tb.append("Size: "+object.get("size")+"\n");
 
 
             org.json.simple.JSONArray tags = (org.json.simple.JSONArray) object.get("tags");
@@ -184,7 +246,6 @@ public class API_Project {
 
             if(command.equals("Previous")){
                 tb.setText("");
-
                 number=number-1;
 
                 if(number==-1){
@@ -198,6 +259,7 @@ public class API_Project {
                 } catch (ParseException ex) {
                     throw new RuntimeException(ex);
                 }
+
 
             }
 
