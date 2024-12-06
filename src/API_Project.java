@@ -29,7 +29,7 @@ public class API_Project {
         API_Project readingIsWhat = new API_Project();
         readingIsWhat.showEventDemo();
         try {
-            readingIsWhat.addImage();
+            readingIsWhat.addImage(); //calling this before????
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -47,6 +47,9 @@ public class API_Project {
     int WIDTH = 550;
     int HEIGHT = 800;
     int number = 0;
+
+    private String urltags = "";
+
 
     private void prepareGUI() {
         mainFrame = new JFrame("Avatar the Last Airbender");
@@ -112,13 +115,19 @@ public class API_Project {
     private void addImage() throws IOException {
         try {
 
-            String path = "https://cataas.com/cat";
+            String path = "https://cataas.com/cat/"+urltags;
+
+            int bobby = path.lastIndexOf(",");
+
+            String bob = path.substring(0,bobby);
+
+            String newpath = bob;
 
 /**repaint image after button is pressed
  * add to path the tags from the objects in the array
  * make the object thing a new variable in order to be able to add the tags**/
 
-            URL url = new URL(path);
+            URL url = new URL(newpath);
             BufferedImage ErrorImage = ImageIO.read(new File("Error.jpg"));
             BufferedImage inputImageBuff = ImageIO.read(url.openStream());
 
@@ -156,6 +165,8 @@ public class API_Project {
             biggerpanel.add(picturepanel);
 
         }
+
+        urltags = "";
 
         mainFrame.setVisible(true);
     }
@@ -201,19 +212,21 @@ public class API_Project {
         try {
 
             org.json.simple.JSONArray jsonmainarray = (org.json.simple.JSONArray) parser.parse(totlaJson);
-
             JSONObject object = (JSONObject) jsonmainarray.get(number);
 
             tb.append("ID: "+object.get("_id")+"\n");
             tb.append("Size: "+object.get("size")+"\n");
-
 
             org.json.simple.JSONArray tags = (org.json.simple.JSONArray) object.get("tags");
             int d = tags.size();
             for (int k = 0; k < d; k++) {
                 String tags1 = (String) tags.get(k);
                 tb.append("Tag " +(k+1)+": "+tags1+"\n");
+
+                urltags= urltags+tags1+",";
             }
+
+            System.out.println(urltags);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -242,6 +255,12 @@ public class API_Project {
                     throw new RuntimeException(ex);
                 }
 
+                try {
+                    addImage();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
             }
 
             if(command.equals("Previous")){
@@ -257,6 +276,12 @@ public class API_Project {
                 try {
                     pull();
                 } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                try {
+                    addImage();
+                } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
 
