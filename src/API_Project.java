@@ -47,6 +47,8 @@ public class API_Project {
     int WIDTH = 550;
     int HEIGHT = 800;
     int number = 0;
+    private Font font = new Font("SansSarif", Font.BOLD, 15);
+    private Font font1 = new Font("SansSarif", Font.BOLD, 18);
 
     private String urltags = "";
 
@@ -70,6 +72,7 @@ public class API_Project {
         infopanel = new JPanel();
         infopanel.setLayout(new GridLayout(1,1));
         tb = new JTextArea();
+        tb.setFont(font1);
         scroll = new JScrollPane(tb);
         searchpanel1 = new JPanel();
         searchpanel1.setLayout(new GridLayout(1,1));
@@ -81,12 +84,16 @@ public class API_Project {
 
         JButton button1 = new JButton("Next");
         JButton button2 = new JButton("Previous");
-        JLabel label1 = new JLabel ("Cat tags:", JLabel.CENTER);
+        JLabel label1 = new JLabel ("Cat info:", JLabel.CENTER);
 
         button1.setActionCommand("Next");
         button1.addActionListener(new ButtonClickListener());
         button2.setActionCommand("Previous");
         button2.addActionListener(new ButtonClickListener());
+
+        button1.setFont(font);
+        button2.setFont(font);
+        label1.setFont(font);
 
         mainFrame.add(searchpanel1, BorderLayout.NORTH);
         searchpanel1.add(button2);
@@ -249,16 +256,19 @@ public class API_Project {
 
                 System.out.println(number);
 
-                try {
-                    pull();
-                } catch (ParseException ex) {
-                    throw new RuntimeException(ex);
-                }
+                if(number!=10) {
 
-                try {
-                    addImage();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                    try {
+                        pull();
+                    } catch (ParseException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                    try {
+                        addImage();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
 
             }
@@ -273,18 +283,21 @@ public class API_Project {
 
                 System.out.println(number);
 
-                try {
-                    pull();
-                } catch (ParseException ex) {
-                    throw new RuntimeException(ex);
-                }
+                if(number!=-1) {
 
-                try {
-                    addImage();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+                    try {
+                        pull();
+                    } catch (ParseException ex) {
+                        throw new RuntimeException(ex);
+                    }
 
+                    try {
+                        addImage();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                }
 
             }
 
