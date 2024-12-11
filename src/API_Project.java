@@ -1,7 +1,6 @@
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -22,8 +21,6 @@ public class API_Project {
     public static void main(String args[]) throws ParseException {
         // In java JSONObject is used to create JSON object
         // which is a subclass of java.util.HashMap.
-
-        JSONObject file = new JSONObject();
 
         // To print in JSON format.
         API_Project readingIsWhat = new API_Project();
@@ -47,14 +44,14 @@ public class API_Project {
     int WIDTH = 550;
     int HEIGHT = 800;
     int number = 0;
-    private Font font = new Font("SansSarif", Font.BOLD, 15);
-    private Font font1 = new Font("SansSarif", Font.BOLD, 18);
-
+    private Font font = new Font("Times New Roman", Font.BOLD, 15);
+    private Font font1 = new Font("Times New Roman", Font.BOLD, 18);
+    private Color lightpurple = new Color (215, 197, 245);
+    private Color lightgreen = new Color (193,225,193);
     private String urltags = "";
 
-
     private void prepareGUI() {
-        mainFrame = new JFrame("Avatar the Last Airbender");
+        mainFrame = new JFrame("Cats!");
         mainFrame.setSize(WIDTH, HEIGHT);
         mainFrame.setLayout(new BorderLayout());
         mainFrame.addWindowListener(new WindowAdapter() {
@@ -95,6 +92,11 @@ public class API_Project {
         button2.setFont(font);
         label1.setFont(font);
 
+        button1.setBackground(lightpurple);
+        button2.setBackground(lightpurple);
+        label1.setOpaque(true);
+        label1.setBackground(lightgreen);
+
         mainFrame.add(searchpanel1, BorderLayout.NORTH);
         searchpanel1.add(button2);
         searchpanel1.add(button1);
@@ -123,29 +125,34 @@ public class API_Project {
         try {
 
             String path = "https://cataas.com/cat/"+urltags;
-
             int bobby = path.lastIndexOf(",");
-
-            String bob = path.substring(0,bobby);
-
-            String newpath = bob;
-
-/**repaint image after button is pressed
- * add to path the tags from the objects in the array
- * make the object thing a new variable in order to be able to add the tags**/
+            String newpath = path.substring(0,bobby);
 
             URL url = new URL(newpath);
             BufferedImage ErrorImage = ImageIO.read(new File("Error.jpg"));
             BufferedImage inputImageBuff = ImageIO.read(url.openStream());
 
+            double errorimagewidth = ErrorImage.getWidth();
+            double errorimageheight = ErrorImage.getHeight();
+            double inputimagebuffwidth = inputImageBuff.getWidth();
+            double inputimagebuffheight = inputImageBuff.getHeight();
+
+            double errorratio = (errorimagewidth/errorimageheight);
+            double inputimageratio = (inputimagebuffwidth/inputimagebuffheight);
+
+            int newheighterrorimage = (int) Math.round((errorimagewidth/errorimagewidth)*350);
+            int newheightinputimagebuff = (int) Math.round((inputimagebuffheight/inputimagebuffheight)*350);
+            int newwidtherrorimage = (int) Math.round((newheighterrorimage)*(errorratio));
+            int newinputimagewidth = (int) Math.round((newheightinputimagebuff)*(inputimageratio));
+
             ImageIcon inputImage;
             if (inputImageBuff != null) {
-                inputImage = new ImageIcon(inputImageBuff.getScaledInstance(400, 400, Image.SCALE_SMOOTH));
+                inputImage = new ImageIcon(inputImageBuff.getScaledInstance(newinputimagewidth, newheightinputimagebuff, Image.SCALE_SMOOTH));
 
                 if (inputImage != null) {
                     imageLabel = new JLabel(inputImage);
                 } else {
-                    imageLabel =new JLabel(new ImageIcon(ErrorImage.getScaledInstance(400,400, Image.SCALE_SMOOTH)));
+                    imageLabel =new JLabel(new ImageIcon(ErrorImage.getScaledInstance(newwidtherrorimage,newheighterrorimage, Image.SCALE_SMOOTH)));
 
                 }
                 picturepanel.removeAll();
@@ -170,7 +177,6 @@ public class API_Project {
             picturepanel.repaint();
             picturepanel.add(imageLabel);
             biggerpanel.add(picturepanel);
-
         }
 
         urltags = "";
@@ -238,7 +244,6 @@ public class API_Project {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private class ButtonClickListener implements ActionListener {
@@ -270,7 +275,6 @@ public class API_Project {
                         throw new RuntimeException(ex);
                     }
                 }
-
             }
 
             if(command.equals("Previous")){
@@ -296,12 +300,8 @@ public class API_Project {
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
-
                 }
-
             }
-
         }
     }
-
 }
