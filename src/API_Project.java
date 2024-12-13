@@ -42,7 +42,7 @@ public class API_Project {
     private JScrollPane scroll;
     private JTextArea tb;
     int WIDTH = 550;
-    int HEIGHT = 800;
+    int HEIGHT = 700;
     int number = 0;
     private Font font = new Font("Times New Roman", Font.BOLD, 15);
     private Font font1 = new Font("Times New Roman", Font.BOLD, 18);
@@ -65,7 +65,7 @@ public class API_Project {
         infopanel1 = new JPanel();
         infopanel1.setLayout(new BorderLayout());
         biggerpanel = new JPanel();
-        biggerpanel.setLayout(new GridLayout(2,1));
+        biggerpanel.setLayout(new GridBagLayout());
         infopanel = new JPanel();
         infopanel.setLayout(new GridLayout(1,1));
         tb = new JTextArea();
@@ -101,8 +101,19 @@ public class API_Project {
         searchpanel1.add(button2);
         searchpanel1.add(button1);
         mainFrame.add(biggerpanel);
-        biggerpanel.add(infopanel1);
-        biggerpanel.add(picturepanel);
+
+        /**figure out what to do about the stuff below and how to make it work**/
+
+        GridBagConstraints c = new GridBagConstraints();
+
+        c.gridx = 0;
+        c.gridy = 0;
+        biggerpanel.add(infopanel1, c);
+        c.gridheight=2;
+        biggerpanel.add(picturepanel, c);
+
+        /**end**/
+
         infopanel1.add(infopanel, BorderLayout.CENTER);
         infopanel1.add(label1, BorderLayout.NORTH);
         infopanel.add(scroll);
@@ -140,8 +151,8 @@ public class API_Project {
             double errorratio = (errorimagewidth/errorimageheight);
             double inputimageratio = (inputimagebuffwidth/inputimagebuffheight);
 
-            int newheighterrorimage = (int) Math.round((errorimagewidth/errorimagewidth)*350);
-            int newheightinputimagebuff = (int) Math.round((inputimagebuffheight/inputimagebuffheight)*350);
+            int newheighterrorimage = (int) Math.round((errorimagewidth/errorimagewidth)*310);
+            int newheightinputimagebuff = (int) Math.round((inputimagebuffheight/inputimagebuffheight)*310);
             int newwidtherrorimage = (int) Math.round((newheighterrorimage)*(errorratio));
             int newinputimagewidth = (int) Math.round((newheightinputimagebuff)*(inputimageratio));
 
@@ -255,7 +266,7 @@ public class API_Project {
 
                 number = number+1;
 
-                if(number==10){
+                if(number>=10){
                     tb.setText("No more cats this way! Hit 'Previous' button");
                 }
 
@@ -281,7 +292,7 @@ public class API_Project {
                 tb.setText("");
                 number=number-1;
 
-                if(number==-1){
+                if(number<=-1){
                     tb.setText("No more cats this way! Hit 'Next' button");
                 }
 
