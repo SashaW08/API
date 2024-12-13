@@ -32,6 +32,9 @@ public class API_Project {
         }
     }
 
+    /**the cat images dont scale to the size on the panel that they are in
+     * possibly a problem with the order things are called--addImage is called before the height on the biggerpanel/infopanel1 is established??**/
+
     private JFrame mainFrame;
     private JPanel searchpanel1;
     private JPanel biggerpanel;
@@ -65,7 +68,7 @@ public class API_Project {
         infopanel1 = new JPanel();
         infopanel1.setLayout(new BorderLayout());
         biggerpanel = new JPanel();
-        biggerpanel.setLayout(new GridBagLayout());
+        biggerpanel.setLayout(new BorderLayout());
         infopanel = new JPanel();
         infopanel.setLayout(new GridLayout(1,1));
         tb = new JTextArea();
@@ -101,19 +104,8 @@ public class API_Project {
         searchpanel1.add(button2);
         searchpanel1.add(button1);
         mainFrame.add(biggerpanel);
-
-        /**figure out what to do about the stuff below and how to make it work**/
-
-        GridBagConstraints c = new GridBagConstraints();
-
-        c.gridx = 0;
-        c.gridy = 0;
-        biggerpanel.add(infopanel1, c);
-        c.gridheight=2;
-        biggerpanel.add(picturepanel, c);
-
-        /**end**/
-
+        biggerpanel.add(infopanel1, BorderLayout.NORTH);
+        biggerpanel.add(picturepanel);
         infopanel1.add(infopanel, BorderLayout.CENTER);
         infopanel1.add(label1, BorderLayout.NORTH);
         infopanel.add(scroll);
@@ -151,10 +143,14 @@ public class API_Project {
             double errorratio = (errorimagewidth/errorimageheight);
             double inputimageratio = (inputimagebuffwidth/inputimagebuffheight);
 
-            int newheighterrorimage = (int) Math.round((errorimagewidth/errorimagewidth)*310);
-            int newheightinputimagebuff = (int) Math.round((inputimagebuffheight/inputimagebuffheight)*310);
+            System.out.println(biggerpanel.getHeight());
+            System.out.println(tb.getHeight());
+
+            int newheighterrorimage = (int) Math.round((errorimagewidth/errorimagewidth)*(biggerpanel.getHeight()-infopanel1.getHeight()));
+            int newheightinputimagebuff = (int) Math.round((inputimagebuffheight/inputimagebuffheight)*(biggerpanel.getHeight()-infopanel1.getHeight()));
             int newwidtherrorimage = (int) Math.round((newheighterrorimage)*(errorratio));
             int newinputimagewidth = (int) Math.round((newheightinputimagebuff)*(inputimageratio));
+            System.out.println("width: "+ newheightinputimagebuff);
 
             ImageIcon inputImage;
             if (inputImageBuff != null) {
@@ -245,7 +241,12 @@ public class API_Project {
             int d = tags.size();
             for (int k = 0; k < d; k++) {
                 String tags1 = (String) tags.get(k);
-                tb.append("Tag " +(k+1)+": "+tags1+"\n");
+
+                if(k==d-1) {
+                    tb.append("Tag " + (k + 1) + ": " + tags1);
+                }else{
+                    tb.append("Tag " + (k + 1) + ": " + tags1+"\n");
+                }
 
                 urltags= urltags+tags1+",";
             }
