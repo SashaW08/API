@@ -24,16 +24,8 @@ public class API_Project {
 
         // To print in JSON format.
         API_Project readingIsWhat = new API_Project();
-        readingIsWhat.showEventDemo();
-        try {
-            readingIsWhat.addImage(); //calling this before????
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    /**the cat images dont scale to the size on the panel that they are in
-     * possibly a problem with the order things are called--addImage is called before the height on the biggerpanel/infopanel1 is established??**/
+    }
 
     private JFrame mainFrame;
     private JPanel searchpanel1;
@@ -52,6 +44,30 @@ public class API_Project {
     private Color lightpurple = new Color (215, 197, 245);
     private Color lightgreen = new Color (193,225,193);
     private String urltags = "";
+    private int biggerpanelheight=100;
+    private int infopanel1height=10;
+
+    /**the issue is that the images scale to the previous page, not the one that they are on--I have no idea how to fix this ordering issue
+     * also, now the first image seems to be the size of the first infopanel1 size (like the thing where it only shows the id of the cat)
+     * how did I make this worseeeeeeeee**/
+
+    public API_Project(){
+
+        prepareGUI();
+        showEventDemo();
+
+        try {
+            pull();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        try {
+            addImage();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private void prepareGUI() {
         mainFrame = new JFrame("Cats!");
@@ -113,17 +129,6 @@ public class API_Project {
         mainFrame.setVisible(true);
     }
 
-    public API_Project(){
-
-        prepareGUI();
-
-        try {
-            pull();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
     private void addImage() throws IOException {
         try {
 
@@ -143,14 +148,18 @@ public class API_Project {
             double errorratio = (errorimagewidth/errorimageheight);
             double inputimageratio = (inputimagebuffwidth/inputimagebuffheight);
 
-            System.out.println(biggerpanel.getHeight());
-            System.out.println(tb.getHeight());
+            biggerpanelheight = biggerpanel.getHeight();
+            infopanel1height = infopanel1.getHeight();
 
-            int newheighterrorimage = (int) Math.round((errorimagewidth/errorimagewidth)*(biggerpanel.getHeight()-infopanel1.getHeight()));
-            int newheightinputimagebuff = (int) Math.round((inputimagebuffheight/inputimagebuffheight)*(biggerpanel.getHeight()-infopanel1.getHeight()));
+            System.out.println(biggerpanelheight);
+            System.out.println(infopanel1height);
+
+            int newheighterrorimage = (int) Math.round((errorimagewidth/errorimagewidth)*(biggerpanelheight-infopanel1height));
+            int newheightinputimagebuff = (int) Math.round((inputimagebuffheight/inputimagebuffheight)*(biggerpanelheight-infopanel1height));
             int newwidtherrorimage = (int) Math.round((newheighterrorimage)*(errorratio));
             int newinputimagewidth = (int) Math.round((newheightinputimagebuff)*(inputimageratio));
-            System.out.println("width: "+ newheightinputimagebuff);
+            System.out.println("height: "+ newheightinputimagebuff);
+            System.out.println("width: "+newinputimagewidth);
 
             ImageIcon inputImage;
             if (inputImageBuff != null) {
