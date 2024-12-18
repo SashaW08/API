@@ -18,7 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class API_Project {
-    public static void main(String args[]) throws ParseException {
+    public static void main(String args[]) {
         // In java JSONObject is used to create JSON object
         // which is a subclass of java.util.HashMap.
 
@@ -36,7 +36,7 @@ public class API_Project {
     private JLabel imageLabel;
     private JScrollPane scroll;
     private JTextArea tb;
-    int WIDTH = 550;
+    int WIDTH = 600;
     int HEIGHT = 700;
     int number = 0;
     private Font font = new Font("Times New Roman", Font.BOLD, 15);
@@ -44,12 +44,17 @@ public class API_Project {
     private Color lightpurple = new Color (215, 197, 245);
     private Color lightgreen = new Color (193,225,193);
     private String urltags = "";
-    private int biggerpanelheight=100;
-    private int infopanel1height=10;
 
-    /**the issue is that the images scale to the previous page, not the one that they are on--I have no idea how to fix this ordering issue
-     * also, now the first image seems to be the size of the first infopanel1 size (like the thing where it only shows the id of the cat)
-     * how did I make this worseeeeeeeee**/
+    /**have a first screen that has the user choose between cats and foxes
+     * if they choose cats, have the code you have here show up and run like normal
+     * if they choose foxes, make a similar thing as the cats, but just the fox images
+     *      here is the link to the random foxes: https://randomfox.ca//images//40.jpg
+     *      you can change the fox by changing the number in the link (right now its 40)
+     *      dont just put the link directly in, take the link from this api: https://randomfox.ca/floof/
+     *
+     *
+     * have the two option buttons show up, and then when one is pressed, have an entire new window replacement pop up pulling from the correct API
+     * possibly also have a button that allows the user to go back to the button choices once they're on the animal page already**/
 
     public API_Project(){
 
@@ -135,7 +140,7 @@ public class API_Project {
             String path = "https://cataas.com/cat/"+urltags;
             int bobby = path.lastIndexOf(",");
             String newpath = path.substring(0,bobby);
-
+            System.out.println(path);
             URL url = new URL(newpath);
             BufferedImage ErrorImage = ImageIO.read(new File("Error.jpg"));
             BufferedImage inputImageBuff = ImageIO.read(url.openStream());
@@ -148,18 +153,12 @@ public class API_Project {
             double errorratio = (errorimagewidth/errorimageheight);
             double inputimageratio = (inputimagebuffwidth/inputimagebuffheight);
 
-            biggerpanelheight = biggerpanel.getHeight();
-            infopanel1height = infopanel1.getHeight();
-
-            System.out.println(biggerpanelheight);
-            System.out.println(infopanel1height);
-
-            int newheighterrorimage = (int) Math.round((errorimagewidth/errorimagewidth)*(biggerpanelheight-infopanel1height));
-            int newheightinputimagebuff = (int) Math.round((inputimagebuffheight/inputimagebuffheight)*(biggerpanelheight-infopanel1height));
+            int newheighterrorimage = 532;
+            int newheightinputimagebuff = 532;
             int newwidtherrorimage = (int) Math.round((newheighterrorimage)*(errorratio));
             int newinputimagewidth = (int) Math.round((newheightinputimagebuff)*(inputimageratio));
             System.out.println("height: "+ newheightinputimagebuff);
-            System.out.println("width: "+newinputimagewidth);
+            System.out.println("width: "+ newinputimagewidth);
 
             ImageIcon inputImage;
             if (inputImageBuff != null) {
@@ -180,7 +179,6 @@ public class API_Project {
             }
             else{
                 imageLabel =new JLabel(new ImageIcon(ErrorImage.getScaledInstance(600, 300, Image.SCALE_SMOOTH)));
-
             }
 
         } catch (IOException e) {
@@ -195,11 +193,12 @@ public class API_Project {
             biggerpanel.add(picturepanel);
         }
 
+        System.out.println("image label height: "+picturepanel.getHeight());
+
         urltags = "";
 
         mainFrame.setVisible(true);
     }
-
 
     public void pull() throws ParseException {
         String output = "abc";
@@ -250,16 +249,13 @@ public class API_Project {
             int d = tags.size();
             for (int k = 0; k < d; k++) {
                 String tags1 = (String) tags.get(k);
-
-                if(k==d-1) {
-                    tb.append("Tag " + (k + 1) + ": " + tags1);
+                if(k==0) {
+                    tb.append("Tags: " + tags1);
                 }else{
-                    tb.append("Tag " + (k + 1) + ": " + tags1+"\n");
+                    tb.append(", "+tags1);
                 }
-
                 urltags= urltags+tags1+",";
             }
-
             System.out.println(urltags);
 
         } catch (Exception e) {
@@ -272,6 +268,7 @@ public class API_Project {
             String command = e.getActionCommand();
 
             if (command.equals("Next")) {
+
                 tb.setText("");
 
                 number = number+1;
@@ -299,6 +296,7 @@ public class API_Project {
             }
 
             if(command.equals("Previous")){
+
                 tb.setText("");
                 number=number-1;
 
