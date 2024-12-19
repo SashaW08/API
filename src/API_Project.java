@@ -40,6 +40,7 @@ public class API_Project {
     private JPanel choosepanel;
     private JPanel foxmainpanel;
     private JPanel foxpicturepanel;
+    private JLabel foximagelabel;
     private JScrollPane scroll;
     private JTextArea tb;
     int WIDTH = 600;
@@ -50,17 +51,11 @@ public class API_Project {
     private Color lightpurple = new Color (215, 197, 245);
     private Color lightgreen = new Color (193,225,193);
     private String urltags = "";
+    private String foxlink ="";
 
-    /**have a first screen that has the user choose between cats and foxes
-     * if they choose cats, have the code you have here show up and run like normal
-     * if they choose foxes, make a similar thing as the cats, but just the fox images
-     *      here is the link to the random foxes: https://randomfox.ca//images//40.jpg
-     *      you can change the fox by changing the number in the link (right now its 40)
-     *      dont just put the link directly in, take the link from this api: https://randomfox.ca/floof/
-     *
-     *
-     * have the two option buttons show up, and then when one is pressed, have an entire new window replacement pop up pulling from the correct API
-     * possibly also have a button that allows the user to go back to the button choices once they're on the animal page already**/
+    /**
+     * also have a button that allows the user to go back to the button choices once they're on the animal page already
+     * fix the foxlink thing**/
 
     public API_Project(){
         firstgui();
@@ -348,9 +343,101 @@ public class API_Project {
 
     private void foxaddimage() throws IOException {
 
+        try {
+
+            String path = (foxlink.substring(0,foxlink.lastIndexOf("/"))+(Math.random()*100)+foxlink.substring(foxlink.lastIndexOf(".")));
+            int bobby = path.lastIndexOf(",");
+            String newpath = path.substring(0,bobby);
+            System.out.println(path);
+            URL url = new URL(newpath);
+            BufferedImage ErrorImage = ImageIO.read(new File("Error.jpg"));
+            BufferedImage inputImageBuff = ImageIO.read(url.openStream());
+
+            ImageIcon inputImage;
+            if (inputImageBuff != null) {
+                inputImage = new ImageIcon(inputImageBuff.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+
+                if (inputImage != null) {
+                    foximagelabel = new JLabel(inputImage);
+                } else {
+                    foximagelabel =new JLabel(new ImageIcon(ErrorImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+
+                }
+                foxpicturepanel.removeAll();
+                foxpicturepanel.repaint();
+
+                foxpicturepanel.add(foximagelabel);
+                foxmainpanel.add(foxpicturepanel);
+
+            }
+            else{
+                foximagelabel =new JLabel(new ImageIcon(ErrorImage.getScaledInstance(600, 300, Image.SCALE_SMOOTH)));
+            }
+
+        } catch (IOException e) {
+            System.out.println(e);
+            System.out.println("sadness");
+            BufferedImage ErrorImage = ImageIO.read(new File("Error.jpg"));
+            JLabel imageLabel = new JLabel(new ImageIcon(ErrorImage.getScaledInstance(800, 589, Image.SCALE_SMOOTH)));
+
+            foxpicturepanel.removeAll();
+            foxpicturepanel.repaint();
+            foxpicturepanel.add(foximagelabel);
+            foxmainpanel.add(foxpicturepanel);
+        }
+
+        mainFrame.setVisible(true);
+
     }
 
     public void foxpull() throws ParseException {
+
+        String output = "abc";
+        String foxtotlaJson = "";
+        try {
+
+            URL url = new URL("https://randomfox.ca/floof/");
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+
+            if (conn.getResponseCode() != 200) {
+
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + conn.getResponseCode());
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+
+            System.out.println("Output from Server .... \n");
+            while ((output = br.readLine()) != null) {
+                System.out.println(output);
+                foxtotlaJson += output;
+            }
+
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        JSONParser parser = new JSONParser();
+
+        try {
+
+            org.json.simple.JSONObject foxjsonobject = (org.json.simple.JSONObject) parser.parse(foxtotlaJson);
+
+            foxlink = (String) foxjsonobject.get("image");
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -386,6 +473,14 @@ public class API_Project {
                     throw new RuntimeException(ex);
                 }
 
+                try {
+                    foxaddimage();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+            if(command.equals("Next fox")){
                 try {
                     foxaddimage();
                 } catch (IOException ex) {
