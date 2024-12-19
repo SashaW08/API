@@ -28,12 +28,18 @@ public class API_Project {
     }
 
     private JFrame mainFrame;
+    private JFrame firstmainframe;
+    private JFrame foxmainframe;
     private JPanel searchpanel1;
     private JPanel biggerpanel;
     private JPanel infopanel;
     private JPanel infopanel1;
     private JPanel picturepanel;
     private JLabel imageLabel;
+    private JPanel twobuttonpanel;
+    private JPanel choosepanel;
+    private JPanel foxmainpanel;
+    private JPanel foxpicturepanel;
     private JScrollPane scroll;
     private JTextArea tb;
     int WIDTH = 600;
@@ -57,21 +63,98 @@ public class API_Project {
      * possibly also have a button that allows the user to go back to the button choices once they're on the animal page already**/
 
     public API_Project(){
+        firstgui();
+        firstshoweventdemo();
+    }
 
-        prepareGUI();
-        showEventDemo();
+    private void firstgui(){
 
-        try {
-            pull();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        firstmainframe = new JFrame("Options");
+        firstmainframe.setSize(WIDTH, HEIGHT);
+        firstmainframe.setLayout(new BorderLayout());
+        firstmainframe.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent windowEvent) {
+                System.exit(0);
+            }
+        });
 
-        try {
-            addImage();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        twobuttonpanel = new JPanel ();
+        twobuttonpanel.setLayout(new GridLayout(2,1));
+        choosepanel = new JPanel ();
+        choosepanel.setLayout(new BorderLayout());
+
+        firstmainframe.setVisible(true);
+    }
+
+    private void firstshoweventdemo(){
+
+        JButton catbutton = new JButton("Cats");
+        JButton foxbutton = new JButton("Foxes");
+        JLabel chooselabel = new JLabel("Choose an animal:", JLabel.CENTER);
+
+        catbutton.setActionCommand("Cats");
+        catbutton.addActionListener(new ButtonClickListener());
+        foxbutton.setActionCommand("Foxes");
+        foxbutton.addActionListener(new ButtonClickListener());
+
+        catbutton.setFont(font);
+        foxbutton.setFont(font);
+        chooselabel.setFont(font);
+        catbutton.setBackground(lightpurple);
+        foxbutton.setBackground(lightpurple);
+        chooselabel.setOpaque(true);
+        chooselabel.setBackground(lightgreen);
+
+        firstmainframe.add(choosepanel);
+        choosepanel.add(chooselabel, BorderLayout.NORTH);
+        choosepanel.add(twobuttonpanel, BorderLayout.CENTER);
+        twobuttonpanel.add(catbutton);
+        twobuttonpanel.add(foxbutton);
+
+        firstmainframe.setVisible(true);
+
+    }
+
+    private void foxgui(){
+
+        foxmainframe = new JFrame("Foxes");
+        foxmainframe.setSize(WIDTH, HEIGHT);
+        foxmainframe.setLayout(new BorderLayout());
+        foxmainframe.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent windowEvent) {
+                System.exit(0);
+            }
+        });
+
+        foxmainpanel = new JPanel ();
+        foxmainpanel.setLayout(new BorderLayout());
+        foxpicturepanel = new JPanel ();
+        foxpicturepanel.setLayout(new BorderLayout());
+
+        foxmainframe.setVisible(true);
+
+    }
+
+    private void foxshoweventdemo(){
+
+        JButton foxnextbutton = new JButton("Next fox");
+        JLabel foxlabel = new JLabel("Fox image:", JLabel.CENTER);
+
+        foxnextbutton.setActionCommand("Next fox");
+        foxnextbutton.addActionListener(new ButtonClickListener());
+
+        foxnextbutton.setFont(font);
+        foxlabel.setFont(font);
+        foxnextbutton.setBackground(lightpurple);
+        foxlabel.setOpaque(true);
+        foxlabel.setBackground(lightgreen);
+
+        foxmainframe.add(foxmainpanel);
+        foxmainpanel.add(foxlabel, BorderLayout.NORTH);
+        foxmainpanel.add(foxnextbutton, BorderLayout.SOUTH);
+        foxmainpanel.add(foxpicturepanel, BorderLayout.CENTER);
+
+        foxmainframe.setVisible(true);
     }
 
     private void prepareGUI() {
@@ -263,9 +346,52 @@ public class API_Project {
         }
     }
 
+    private void foxaddimage() throws IOException {
+
+    }
+
+    public void foxpull() throws ParseException {
+
+    }
+
     private class ButtonClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
+
+            if(command.equals("Cats")){
+                prepareGUI();
+                showEventDemo();
+
+                try {
+                    pull();
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                try {
+                    addImage();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+            }
+
+            if(command.equals("Foxes")){
+                foxgui();
+                foxshoweventdemo();
+
+                try {
+                    foxpull();
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                try {
+                    foxaddimage();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
 
             if (command.equals("Next")) {
 
