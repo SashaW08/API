@@ -41,6 +41,7 @@ public class API_Project {
     private JPanel foxmainpanel;
     private JPanel foxpicturepanel;
     private JLabel foximagelabel;
+    private JPanel foxbiggerpanel;
     private JScrollPane scroll;
     private JTextArea tb;
     int WIDTH = 600;
@@ -53,9 +54,7 @@ public class API_Project {
     private String urltags = "";
     private String foxlink ="";
 
-    /**
-     * also have a button that allows the user to go back to the button choices once they're on the animal page already
-     * fix the foxlink thing**/
+    /** why does the code not work--what is wrong with the foxpull methodddddd**/
 
     public API_Project(){
         firstgui();
@@ -81,7 +80,7 @@ public class API_Project {
         firstmainframe.setVisible(true);
     }
 
-    private void firstshoweventdemo(){
+    public void firstshoweventdemo(){
 
         JButton catbutton = new JButton("Cats");
         JButton foxbutton = new JButton("Foxes");
@@ -125,26 +124,35 @@ public class API_Project {
         foxmainpanel.setLayout(new BorderLayout());
         foxpicturepanel = new JPanel ();
         foxpicturepanel.setLayout(new BorderLayout());
+        foxbiggerpanel = new JPanel();
+        foxbiggerpanel.setLayout(new BorderLayout());
 
         foxmainframe.setVisible(true);
 
     }
 
-    private void foxshoweventdemo(){
+    public void foxshoweventdemo(){
 
         JButton foxnextbutton = new JButton("Next fox");
+        JButton foxbackbutton = new JButton("Back to animal options");
         JLabel foxlabel = new JLabel("Fox image:", JLabel.CENTER);
 
         foxnextbutton.setActionCommand("Next fox");
         foxnextbutton.addActionListener(new ButtonClickListener());
+        foxbackbutton.setActionCommand("Back to animal options");
+        foxbackbutton.addActionListener(new ButtonClickListener());
 
         foxnextbutton.setFont(font);
+        foxbackbutton.setFont(font);
         foxlabel.setFont(font);
         foxnextbutton.setBackground(lightpurple);
+        foxbackbutton.setBackground(lightpurple);
         foxlabel.setOpaque(true);
         foxlabel.setBackground(lightgreen);
 
-        foxmainframe.add(foxmainpanel);
+        foxmainframe.add(foxbiggerpanel);
+        foxbiggerpanel.add(foxmainpanel, BorderLayout.CENTER);
+        foxbiggerpanel.add(foxbackbutton, BorderLayout.SOUTH);
         foxmainpanel.add(foxlabel, BorderLayout.NORTH);
         foxmainpanel.add(foxnextbutton, BorderLayout.SOUTH);
         foxmainpanel.add(foxpicturepanel, BorderLayout.CENTER);
@@ -183,19 +191,24 @@ public class API_Project {
 
         JButton button1 = new JButton("Next");
         JButton button2 = new JButton("Previous");
+        JButton button3 = new JButton("Back to animal options");
         JLabel label1 = new JLabel ("Cat info:", JLabel.CENTER);
 
         button1.setActionCommand("Next");
         button1.addActionListener(new ButtonClickListener());
         button2.setActionCommand("Previous");
         button2.addActionListener(new ButtonClickListener());
+        button3.setActionCommand("Back to animal options");
+        button3.addActionListener(new ButtonClickListener());
 
         button1.setFont(font);
         button2.setFont(font);
+        button3.setFont(font);
         label1.setFont(font);
 
         button1.setBackground(lightpurple);
         button2.setBackground(lightpurple);
+        button3.setBackground(lightpurple);
         label1.setOpaque(true);
         label1.setBackground(lightgreen);
 
@@ -207,6 +220,7 @@ public class API_Project {
         biggerpanel.add(picturepanel);
         infopanel1.add(infopanel, BorderLayout.CENTER);
         infopanel1.add(label1, BorderLayout.NORTH);
+        biggerpanel.add(button3, BorderLayout.SOUTH);
         infopanel.add(scroll);
 
         mainFrame.setVisible(true);
@@ -231,8 +245,8 @@ public class API_Project {
             double errorratio = (errorimagewidth/errorimageheight);
             double inputimageratio = (inputimagebuffwidth/inputimagebuffheight);
 
-            int newheighterrorimage = 532;
-            int newheightinputimagebuff = 532;
+            int newheighterrorimage = 504;
+            int newheightinputimagebuff = 504;
             int newwidtherrorimage = (int) Math.round((newheighterrorimage)*(errorratio));
             int newinputimagewidth = (int) Math.round((newheightinputimagebuff)*(inputimageratio));
             System.out.println("height: "+ newheightinputimagebuff);
@@ -346,10 +360,8 @@ public class API_Project {
         try {
 
             String path = (foxlink.substring(0,foxlink.lastIndexOf("/"))+(Math.random()*100)+foxlink.substring(foxlink.lastIndexOf(".")));
-            int bobby = path.lastIndexOf(",");
-            String newpath = path.substring(0,bobby);
             System.out.println(path);
-            URL url = new URL(newpath);
+            URL url = new URL(path);
             BufferedImage ErrorImage = ImageIO.read(new File("Error.jpg"));
             BufferedImage inputImageBuff = ImageIO.read(url.openStream());
 
@@ -378,7 +390,7 @@ public class API_Project {
             System.out.println(e);
             System.out.println("sadness");
             BufferedImage ErrorImage = ImageIO.read(new File("Error.jpg"));
-            JLabel imageLabel = new JLabel(new ImageIcon(ErrorImage.getScaledInstance(800, 589, Image.SCALE_SMOOTH)));
+            JLabel foximagelabel = new JLabel(new ImageIcon(ErrorImage.getScaledInstance(800, 589, Image.SCALE_SMOOTH)));
 
             foxpicturepanel.removeAll();
             foxpicturepanel.repaint();
@@ -444,6 +456,11 @@ public class API_Project {
     private class ButtonClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             String command = e.getActionCommand();
+
+            if(command.equals("Back to animal options")){
+                firstgui();
+                firstshoweventdemo();
+            }
 
             if(command.equals("Cats")){
                 prepareGUI();
