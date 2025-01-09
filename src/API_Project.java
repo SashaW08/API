@@ -302,6 +302,7 @@ public class API_Project {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0");
 
             if (conn.getResponseCode() != 200) {
 
@@ -361,7 +362,9 @@ public class API_Project {
 
             /**FIX FOXLINK TO TAKE FROM THE PREVIOUS FOXLINK AFTER OTHER PROBLEM IS SOLVED**/
 
-            foxlink = ("https:\\/\\/randomfox.ca\\/images\\/100.jpg");
+            foxlink = ("https://randomfox.ca/images/100.jpg");
+
+                    //("https:\\/\\/randomfox.ca\\/images\\/100.jpg");
 
                     //foxlink.substring(0,6)+"\\"+foxlink.substring(7,7)+"\\"+foxlink.substring(8,19)+"\\"+foxlink.substring(20,26)+"\\"+foxlink.substring(27,34);
 
@@ -370,6 +373,7 @@ public class API_Project {
             System.out.println(foxlink);
 
             BufferedImage ErrorImage = ImageIO.read(new File("Error.jpg"));
+            System.out.println(url);
             BufferedImage inputImageBuff = ImageIO.read(url.openStream());
 
             ImageIcon inputImage;
