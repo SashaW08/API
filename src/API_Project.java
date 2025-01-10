@@ -413,6 +413,7 @@ public class API_Project {
             System.out.println(inputImageBuff.getHeight());
             System.out.println(inputImageBuff.getWidth());
 
+
             System.out.println(foxratio);
             int b = (int)(570*foxratio);
 
