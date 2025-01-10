@@ -16,6 +16,23 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.stream.FileImageOutputStream;
 
 public class API_Project {
     public static void main(String args[]) {
@@ -360,13 +377,35 @@ public class API_Project {
 
         try {
 
+            //HOW I FIXED THE 403 ERROR
+            //https://stackoverflow.com/questions/41069457/403-error-when-trying-to-access-an-image-url
+
             URL url = new URL(foxlink);
+
+            URLConnection openConnection = url.openConnection();
+            openConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+
+            openConnection.connect();
+
+            BufferedImage img = null;
+
+            InputStream in = new BufferedInputStream(openConnection.getInputStream());
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            int n = 0;
+            while (-1 != (n = in.read(buf))) {
+                out.write(buf, 0, n);
+            }
+            out.close();
+            in.close();
+            byte[] response = out.toByteArray();
+            img = ImageIO.read(new ByteArrayInputStream(response));
 
             System.out.println(foxlink);
 
             BufferedImage ErrorImage = ImageIO.read(new File("Error.jpg"));
             System.out.println(url);
-            BufferedImage inputImageBuff = ImageIO.read(url.openStream());
+            BufferedImage inputImageBuff = img;
 
             ImageIcon inputImage;
             if (inputImageBuff != null) {
@@ -503,6 +542,12 @@ public class API_Project {
             }
 
             if(command.equals("Next fox")){
+                try {
+                    foxpull();
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+
                 try {
                     foxaddimage();
                 } catch (IOException ex) {
