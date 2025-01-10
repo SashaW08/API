@@ -16,23 +16,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLConnection;
-
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
-import javax.imageio.stream.FileImageOutputStream;
 
 public class API_Project {
     public static void main(String args[]) {
@@ -407,17 +395,13 @@ public class API_Project {
             System.out.println(url);
             BufferedImage inputImageBuff = img;
 
-
-            double foxratio = inputImageBuff.getHeight()/inputImageBuff.getWidth();
+            double foxratio = (double)inputImageBuff.getHeight()/inputImageBuff.getWidth();
 
             System.out.println(inputImageBuff.getHeight());
             System.out.println(inputImageBuff.getWidth());
-
-
             System.out.println(foxratio);
+
             int b = (int)(570*foxratio);
-
-
 
             ImageIcon inputImage;
             if (inputImageBuff != null) {
