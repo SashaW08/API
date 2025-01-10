@@ -360,14 +360,6 @@ public class API_Project {
 
         try {
 
-            /**FIX FOXLINK TO TAKE FROM THE PREVIOUS FOXLINK AFTER OTHER PROBLEM IS SOLVED**/
-
-            foxlink = ("https://randomfox.ca/images/100.jpg");
-
-                    //("https:\\/\\/randomfox.ca\\/images\\/100.jpg");
-
-                    //foxlink.substring(0,6)+"\\"+foxlink.substring(7,7)+"\\"+foxlink.substring(8,19)+"\\"+foxlink.substring(20,26)+"\\"+foxlink.substring(27,34);
-
             URL url = new URL(foxlink);
 
             System.out.println(foxlink);
@@ -417,12 +409,14 @@ public class API_Project {
 
         String output = "abc";
         String foxtotlaJson = "";
+
         try {
 
             URL url = new URL("https://randomfox.ca/floof/");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET"); conn.setRequestProperty("User-Agent", "Mozilla/5.0"); // Add User-Agent
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0"); // Add User-Agent
             conn.setRequestProperty("Accept", "application/json");
 
             if (conn.getResponseCode() != 200) {
