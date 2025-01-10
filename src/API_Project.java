@@ -407,9 +407,20 @@ public class API_Project {
             System.out.println(url);
             BufferedImage inputImageBuff = img;
 
+
+            double foxratio = inputImageBuff.getHeight()/inputImageBuff.getWidth();
+
+            System.out.println(inputImageBuff.getHeight());
+            System.out.println(inputImageBuff.getWidth());
+
+            System.out.println(foxratio);
+            int b = (int)(570*foxratio);
+
+
+
             ImageIcon inputImage;
             if (inputImageBuff != null) {
-                inputImage = new ImageIcon(inputImageBuff.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+                inputImage = new ImageIcon(inputImageBuff.getScaledInstance(b, 570, Image.SCALE_SMOOTH));
 
                 if (inputImage != null) {
                     foximagelabel = new JLabel(inputImage);
